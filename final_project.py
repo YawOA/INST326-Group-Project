@@ -28,7 +28,16 @@ class House:
         Returns:
             New house object containing the above parameters
         """
-        pass
+        self.size = size
+        self.age = age
+        self.bedrooms = bedrooms
+        self.bathrooms = bathrooms
+        self.windows = windows
+        self.location = location
+        self.doors = doors
+        self.crime_rate = crime_rate
+        self.garage = False
+        self.renovations = False
 
 
 def size_base_value(size):
@@ -65,7 +74,25 @@ def age_value(age, current_value):
     Returns:
          Modified home value based on age
     """
-    pass
+    if (age >= 0) and (age <= 4):
+        return current_value * 1.15
+    elif (age >= 5) and (age <= 10):
+        return current_value * 1.1
+    elif (age >= 11) and (age <= 20):
+        return current_value * 1.05
+    elif (age >= 21) and (age <= 40):
+        return current_value * 1.025
+    elif (age >= 41) and (age <= 50):
+        return current_value
+    elif (age >= 51) and (age <= 60):
+        decreaser = current_value * .035
+        return current_value - decreaser
+    elif (age >= 61) and (age <= 70):
+        decreaser = current_value * .05
+        return current_value - decreaser
+    else:
+        decreaser = current_value * .075
+        return current_value - decreaser
 
 def bedrooms_bathrooms_value(bedrooms, bathrooms, current_value):
     """
@@ -184,6 +211,10 @@ def parse_args(args_list):
     parser.add_argument('location', type=str, help='Location of the property in the U.S')
     parser.add_argument('doors', type=int, help='Number of doors in property')
     parser.add_argument('crime_rate', type=float, help='Crime rate in the area where property is located (per capita)')
+    parser.add_argument('--garage', type=bool, default=False, help='Optional parameter for whether or not property'
+                                                                   'has a garage')
+    parser.add_argument('--renovations', type=bool, default=False, help='Optional parameter for whether or not'
+                                                                        'property has recently undergone renovations')
     args = parser.parse_args(args_list)
     states = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado",
     "Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois",
