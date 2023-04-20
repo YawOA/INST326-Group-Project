@@ -131,7 +131,23 @@ def bedrooms_bathrooms_value(bedrooms, bathrooms, current_value):
         Modified home value based on number of bedrooms and bathrooms
 
     """
-    pass
+    bedrooms_increase = 0
+    if bedrooms > 1 and bedrooms <= 5:
+        bedrooms_increase = 0.05
+    elif bedrooms > 5 and bedrooms <= 9:
+        bedrooms_increase = 0.075
+    elif bedrooms >= 10:
+        bedrooms_increase = 0.125
+    
+    bathrooms_increase = 0
+    if bathrooms > 1 and bathrooms <= 4:
+        bathrooms_increase = 0.025
+    elif bathrooms > 4 and bathrooms <= 7:
+        bathrooms_increase = 0.05
+    elif bathrooms >= 8:
+        bathrooms_increase = 0.075
+    
+    return current_value * (1 + bedrooms_increase + bathrooms_increase)
 
 def doors_windows_value(doors, windows, current_value):
     """
