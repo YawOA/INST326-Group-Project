@@ -56,7 +56,24 @@ def size_base_value(size):
     Returns:
         Base value of the home based on size
     """
-    pass
+    if size < 120 or size > 5000:
+        return None
+    elif size <= 500:
+        return 500
+    elif size <= 800:
+        return 100000
+    elif size <= 1000:
+        return 175000
+    elif size <= 1500:
+        return 250000
+    elif size <= 2500:
+        return 350000
+    elif size <= 4000:
+        return 500000
+    elif size <= 5000:
+        return 750000
+    else:
+        return 1000000
 
 def age_value(age, current_value):
     """
