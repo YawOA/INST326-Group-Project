@@ -36,8 +36,6 @@ class House:
         self.location = location
         self.doors = doors
         self.crime_rate = crime_rate
-        self.garage = False
-        self.renovations = False
 
 
 def size_base_value(size):
@@ -244,10 +242,6 @@ def parse_args(args_list):
     parser.add_argument('location', type=str, help='Location of the property in the U.S')
     parser.add_argument('doors', type=int, help='Number of doors in property')
     parser.add_argument('crime_rate', type=float, help='Crime rate in the area where property is located (per capita)')
-    parser.add_argument('--garage', type=bool, default=False, help='Optional parameter for whether or not property'
-                                                                   'has a garage')
-    parser.add_argument('--renovations', type=bool, default=False, help='Optional parameter for whether or not'
-                                                                        'property has recently undergone renovations')
     args = parser.parse_args(args_list)
     states = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado",
     "Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois",
