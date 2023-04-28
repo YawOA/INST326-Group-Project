@@ -234,14 +234,14 @@ def parse_args(args_list):
         args (ArgumentParser)
     """
     parser = ArgumentParser()
-    parse.add_argument('size', type=int, help='Size of the the property in square feet')
+    parser.add_argument('size', type=int, help='Size of the the property in square feet')
     parser.add_argument('age', type=int, help='Age of the property in years')
     parser.add_argument('bedrooms', type=int, help='Number of bedrooms in the property')
     parser.add_argument('bathrooms', type=int, help='Number of bathrooms in the property')
     parser.add_argument('windows', type=int, help='Number of windows on the property')
     parser.add_argument('location', type=str, help='Location of the property in the U.S')
     parser.add_argument('doors', type=int, help='Number of doors in property')
-    parser.add_argument('crime_rate', type=float, help='Crime rate in the area where property is located (per capita)')
+
     args = parser.parse_args(args_list)
     states = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado",
     "Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois",
@@ -261,18 +261,20 @@ def parse_args(args_list):
         raise ValueError("Number of bathrooms cannot be negative")
     if args.windows < 0:
         raise ValueError("Number of windows cannot be negative")
-    location_checker = args.location.strip()
+    location_checker = args.location.split(",")
     if location_checker[-1] not in states:
         raise IndexError("State entered is not a real U.S state")
     if args.doors < 0:
         raise ValueError("Number of doors cannot be negative")
-    if args.crime_rate < 0.0:
-        raise ValueError("Crime cannot be negative and must be greater than 0.0")
+    return args
 
 if __name__ == "__main__":
     """
     Only function is to call the main
     """
+    arguments = parse_args(sys.argv[1:])
+    main(arguments.size, arguments.age, arguments.bedrooms, arguments.bathrooms,
+            arguments.windows, arguments.location, arguments.doors)
 
 
 
