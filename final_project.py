@@ -239,6 +239,22 @@ def main(size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
         Creates object, computes home value using calculating functions, and determines whether the property is
         a good buy
     """
+    base_value = size_base_value(size)
+    print(base_value)
+
+    age_adjusted_value = age_value(age, base_value)
+    print(age_adjusted_value)
+
+    bedrooms_bathrooms_adjusted_value = bedrooms_bathrooms_value(bedrooms, bathrooms, age_adjusted_value)
+    print(bedrooms_bathrooms_adjusted_value)
+
+    doors_windows_adjusted_value = doors_windows_value(doors, windows, bedrooms_bathrooms_adjusted_value)
+    print(doors_windows_adjusted_value)
+
+    location_safety_adjusted_value = location_safety_value(location, crime_rate, doors_windows_adjusted_value)
+    print("Final Value: ", location_safety_adjusted_value)
+
+    value_checker(location_safety_adjusted_value)
 
 
 def parse_args(args_list):
