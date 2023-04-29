@@ -169,7 +169,32 @@ def doors_windows_value(doors, windows, current_value):
         Updated home value based on number of doors and windows in home.
 
     """
-    pass
+    if doors >= 0 and doors <= 7:
+        door_inc = .015
+    elif doors >= 8 and doors <= 14:
+        door_inc = .035
+    elif doors >= 15 and doors <= 21:
+        door_inc = .05
+    elif doors >= 22 and doors <= 34:
+        door_inc = .075
+    else: 
+        door_inc = 0.1
+
+    if windows >= 0 and windows <= 2:
+        window_inc = .015
+    elif windows >= 3 and windows <= 5:
+        window_inc = .035
+    elif windows >= 6 and windows <= 9:
+        winow_inc = .05
+    elif windows >= 10 and windows <= 15:
+        window_inc = .075
+    else: 
+        window_inc = 0.2
+    
+    updated_Value = current_value * (1 + door_inc + window_inc)
+
+    return updated_Value
+
 
 def location_safety_value(location, crime_rate, current_value):
     """
