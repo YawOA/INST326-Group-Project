@@ -12,7 +12,7 @@ import sys
 import argparse
 
 class House:
-    def __int__(self, size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
+    def __init__(self, size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
         """
         Arguments:
             size: The size of the home, in square feet
