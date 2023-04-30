@@ -222,7 +222,29 @@ def value_checker(final_value):
     Returns:
         A final value assessment to determine whether the property in question is of good value
     """
-    pass
+    great_value_1 = (home.bedrooms >= 3) and (home.bathrooms >= 2) and (crime_rate <= 500) and \
+                   (final_value <= 550000)
+    great_value_2 = (home.windows >= 7) and (home.doors >= 20) and(home.bedrooms >= 3) and (home.bathrooms >= 2) \
+                   and (crime_rate <= 500) and \
+                   (final_value <= 450000)
+    decent_value_1 = (home.bedrooms >= 2 and home.bedrooms <= 4) and \
+                     (home.bathrooms >= 1 and home.bathrooms <= 3) and \
+                     ((crime_rate >= 501 and crime_rate <= 800) or (crime_rate >= 801 and crime_rate <= 1500)) and \
+                   (final_value >= 500000 and final_value <= 650000)
+    decent_value_2 = (home.windows >= 5 and home.windows <= 8) and (home.doors >= 15 and home.doors <= 21) and \
+        (home.bedrooms >= 2 and home.bedrooms <= 4) and \
+        (home.bathrooms >= 1 and home.bathrooms <= 3) and \
+        ((crime_rate >= 501 and crime_rate <= 800) or (crime_rate >= 801 and crime_rate <= 1500)) and \
+        (final_value >= 500000 and final_value <= 650000)
+    questionable_value_1 = (home.bedrooms >= 1 and home.bedrooms <= 5) and \
+                     (home.bathrooms >= 1 and home.bathrooms <= 3) and \
+                     ((crime_rate >= 1500 and crime_rate <= 1800)) and \
+                   (final_value >= 300000 and final_value <= 700000)
+    questionable_value_2 = (home.windows >= 3 and home.windows <= 8) and (home.doors >= 12 and home.doors <= 23)\
+                           and (home.bedrooms >= 1 and home.bedrooms <= 5) and \
+                     (home.bathrooms >= 1 and home.bathrooms <= 3) and \
+                     ((crime_rate >= 1500 and crime_rate <= 1800)) and \
+                   (final_value >= 300000 and final_value <= 700000)
 
 def main(size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
     """
