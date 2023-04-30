@@ -213,7 +213,24 @@ def location_safety_value(location, crime_rate, current_value):
         Modified property value based on location and its crime rate
 
     """
-    pass
+    url = "https://andruxnet-world-cities-v1.p.rapidapi.com/"
+
+    querystring = {"query":"USA"}
+
+    headers = {"content-type": "application/octet-stream", "X-RapidAPI-Key": "db7cefe071msh93380fc92811660p178243jsnf842593f19dd", "X-RapidAPI-Host": "andruxnet-world-cities-v1.p.rapidapi.com"}
+
+    response = requests.get(url, headers=headers, data= querystring)
+
+    print(response.json())
+
+    if response.status_code == 200:
+        # Success!
+        result = response.json()
+        print(result)
+    else:
+        # Error
+        print("Error:", response.status_code)
+
 
 def value_checker(final_value):
     """
