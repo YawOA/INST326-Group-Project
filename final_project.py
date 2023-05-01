@@ -171,7 +171,7 @@ def doors_windows_value(doors, windows, current_value):
     """
     pass
 
-def location_safety_value(location, crime_rate, current_value):
+def location_safety_value(location, current_value):
     """
     Arguments:
         current_value: Default value of home based on differing factors
@@ -188,7 +188,21 @@ def location_safety_value(location, crime_rate, current_value):
         Modified property value based on location and its crime rate
 
     """
-    pass
+    import requests
+
+    url = "https://andruxnet-world-cities-v1.p.rapidapi.com/"
+
+    querystring = {"query":"paris","searchby":"city"}
+
+    headers = {
+	"content-type": "application/octet-stream",
+	"X-RapidAPI-Key": "SIGN-UP-FOR-KEY",
+	"X-RapidAPI-Host": "andruxnet-world-cities-v1.p.rapidapi.com"
+    }
+
+    response = requests.get(url, headers=headers, params=querystring)
+
+    print(response.json())
 
 def value_checker(final_value):
     """
