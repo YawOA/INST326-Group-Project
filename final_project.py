@@ -12,7 +12,7 @@ import sys
 import argparse
 
 class House:
-    def __int__(self, size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
+    def __init__(self, size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
         """
         Arguments:
             size: The size of the home, in square feet
@@ -169,7 +169,32 @@ def doors_windows_value(doors, windows, current_value):
         Updated home value based on number of doors and windows in home.
 
     """
-    pass
+    if doors >= 0 and doors <= 7:
+        door_inc = .015
+    elif doors >= 8 and doors <= 14:
+        door_inc = .035
+    elif doors >= 15 and doors <= 21:
+        door_inc = .05
+    elif doors >= 22 and doors <= 34:
+        door_inc = .075
+    else: 
+        door_inc = 0.1
+
+    if windows >= 0 and windows <= 2:
+        window_inc = .015
+    elif windows >= 3 and windows <= 5:
+        window_inc = .035
+    elif windows >= 6 and windows <= 9:
+        winow_inc = .05
+    elif windows >= 10 and windows <= 15:
+        window_inc = .075
+    else: 
+        window_inc = 0.2
+    
+    updated_Value = current_value * (1 + door_inc + window_inc)
+
+    return updated_Value
+
 
 def location_safety_value(location, current_value):
     """
@@ -188,6 +213,7 @@ def location_safety_value(location, current_value):
         Modified property value based on location and its crime rate
 
     """
+<<<<<<< HEAD
     import requests
 
     url = "https://andruxnet-world-cities-v1.p.rapidapi.com/"
@@ -203,6 +229,26 @@ def location_safety_value(location, current_value):
     response = requests.get(url, headers=headers, params=querystring)
 
     print(response.json())
+=======
+    url = "https://andruxnet-world-cities-v1.p.rapidapi.com/"
+
+    querystring = {"query":"USA"}
+
+    headers = {"content-type": "application/octet-stream", "X-RapidAPI-Key": "db7cefe071msh93380fc92811660p178243jsnf842593f19dd", "X-RapidAPI-Host": "andruxnet-world-cities-v1.p.rapidapi.com"}
+
+    response = requests.get(url, headers=headers, data= querystring)
+
+    print(response.json())
+
+    if response.status_code == 200:
+        # Success!
+        result = response.json()
+        print(result)
+    else:
+        # Error
+        print("Error:", response.status_code)
+
+>>>>>>> aef25f75276bf04b9662953677380f1a33fc10a9
 
 def value_checker(final_value):
     """
@@ -211,7 +257,29 @@ def value_checker(final_value):
     Returns:
         A final value assessment to determine whether the property in question is of good value
     """
-    pass
+    great_value_1 = (home.bedrooms >= 3) and (home.bathrooms >= 2) and (crime_rate <= 500) and \
+                   (final_value <= 550000)
+    great_value_2 = (home.windows >= 7) and (home.doors >= 20) and(home.bedrooms >= 3) and (home.bathrooms >= 2) \
+                   and (crime_rate <= 500) and \
+                   (final_value <= 450000)
+    decent_value_1 = (home.bedrooms >= 2 and home.bedrooms <= 4) and \
+                     (home.bathrooms >= 1 and home.bathrooms <= 3) and \
+                     ((crime_rate >= 501 and crime_rate <= 800) or (crime_rate >= 801 and crime_rate <= 1500)) and \
+                   (final_value >= 500000 and final_value <= 650000)
+    decent_value_2 = (home.windows >= 5 and home.windows <= 8) and (home.doors >= 15 and home.doors <= 21) and \
+        (home.bedrooms >= 2 and home.bedrooms <= 4) and \
+        (home.bathrooms >= 1 and home.bathrooms <= 3) and \
+        ((crime_rate >= 501 and crime_rate <= 800) or (crime_rate >= 801 and crime_rate <= 1500)) and \
+        (final_value >= 500000 and final_value <= 650000)
+    questionable_value_1 = (home.bedrooms >= 1 and home.bedrooms <= 5) and \
+                     (home.bathrooms >= 1 and home.bathrooms <= 3) and \
+                     ((crime_rate >= 1500 and crime_rate <= 1800)) and \
+                   (final_value >= 300000 and final_value <= 700000)
+    questionable_value_2 = (home.windows >= 3 and home.windows <= 8) and (home.doors >= 12 and home.doors <= 23)\
+                           and (home.bedrooms >= 1 and home.bedrooms <= 5) and \
+                     (home.bathrooms >= 1 and home.bathrooms <= 3) and \
+                     ((crime_rate >= 1500 and crime_rate <= 1800)) and \
+                   (final_value >= 300000 and final_value <= 700000)
 
 def main(size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
     """
@@ -228,6 +296,29 @@ def main(size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
         Creates object, computes home value using calculating functions, and determines whether the property is
         a good buy
     """
+    home = House(size, age, bedrooms, bathrooms, windows, location, doors)
+    base_value = size_base_value(home.size)
+    print("The base value for the property is: $", base_value)
+
+    age_adjusted_value = age_value(home.age, base_value)
+    print("The age of the home is", home.age, "years. Therefore, this changes the property value"
+                                              " to $", age_adjusted_value)
+
+    bedrooms_bathrooms_adjusted_value = bedrooms_bathrooms_value(home.bedrooms, home.bathrooms, age_adjusted_value)
+    print("There are", home.bedrooms, "bedrooms and", home.bathrooms, "bathrooms. Therefore, this changes the "
+                                                                      "property value to $",
+          bedrooms_bathrooms_adjusted_value)
+
+    doors_windows_adjusted_value = doors_windows_value(home.doors, home.windows, bedrooms_bathrooms_adjusted_value)
+    print("There are", home.doors, "doors and", home.windows, "windows. Therefore, this changes the property"
+                                                              " value to $",
+          doors_windows_adjusted_value)
+
+    #location_safety_adjusted_value = location_safety_value(home.location, doors_windows_adjusted_value)
+    #print("After assessing the location of the property, the final value
+    #  comes out to $", location_safety_adjusted_value)
+
+    #value_checker(location_safety_adjusted_value)
 
 
 def parse_args(args_list):
