@@ -280,6 +280,29 @@ def value_checker(final_value):
                      (home.bathrooms >= 1 and home.bathrooms <= 3) and \
                      ((crime_rate >= 1500 and crime_rate <= 1800)) and \
                    (final_value >= 300000 and final_value <= 700000)
+    bad_value_1 = (home.bedrooms >= 1 and home.bedrooms <= 3) and \
+                     (home.bathrooms >= 0 and home.bathrooms <= 1) and \
+                     ((crime_rate > 1801)) and \
+                   (final_value >= 200000 and final_value <= 800000)
+    bad_value_2 = (home.windows >= 2 and home.windows <= 7) and (home.doors >= 7 and home.doors <= 23)\
+                    and (home.bedrooms >= 1 and home.bedrooms <= 3) and \
+                     (home.bathrooms >= 0 and home.bathrooms <= 1) and \
+                     ((crime_rate >= 1801)) and \
+                   (final_value >= 200000 and final_value <= 800000)
+    if great_value_1 == True or great_value_2 == True:
+        print("After assessing the different aspects of this property, we have "
+              "concluded that this property is a good buy")
+    if decent_value_1 == True or decent_value_2 == True:
+        print("After assessing the different aspects of this property, we have "
+              "concluded that this property is a decent buy, through there are better options out there")
+    if questionable_value_1 == True or questionable_value_2 == True:
+        print("After assessing the different aspects of this property, we have "
+              "concluded that this property has questionable value, and any thoughts of purchasing should be"
+              "given a second thought")
+    if bad_value_1 == True or bad_value_2 == True:
+        print("After assessing the different aspects of this property, we have "
+              "concluded that this property is not a good buy, and any thoughts of purchasing should be"
+              "heavily reconsidered")
 
 def main(size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
     """
