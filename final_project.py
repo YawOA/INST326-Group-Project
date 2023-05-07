@@ -9,7 +9,8 @@ to determine whether the home is a good buy
 """
 
 import sys
-import argparse
+from argparse import ArgumentParser
+import requests
 
 class House:
     def __init__(self, size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
