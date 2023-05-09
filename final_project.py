@@ -42,7 +42,7 @@ def size_base_value(size):
     Arguments:
         size: The size of the home, in square feet. This will set the base value of the home based on the
         following information:
-        1. 120 - 500 feet: $50000
+        1. 120 - 500 feet: $50,000
         2. 501 - 800 feet: $100,000
         3. 801 - 1,000 feet: $175,000
         4. 1,001 - 1,500 feet: $250,000
