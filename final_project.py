@@ -13,7 +13,7 @@ from argparse import ArgumentParser
 import requests
 
 class House:
-    def __init__(self, size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
+    def __init__(self, size, age, bedrooms, bathrooms, windows, location, doors):
         """
         Arguments:
             size: The size of the home, in square feet
@@ -36,7 +36,6 @@ class House:
         self.windows = windows
         self.location = location
         self.doors = doors
-        self.crime_rate = crime_rate
 
 
 def size_base_value(size):
