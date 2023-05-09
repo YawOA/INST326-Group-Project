@@ -23,7 +23,6 @@ class House:
             windows: Number of windows installed throughout the house
             location: Where the home is located in
             doors: Number of doors throughout the house
-            crime_rate: The crime rate within the area per capita
             Two optional parameters for this is garage for old homes (50 and up)
             whether it was renovated(these will be in boolean)
         Returns:
