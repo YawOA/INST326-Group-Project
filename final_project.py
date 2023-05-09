@@ -214,42 +214,33 @@ def location_safety_value(location, current_value):
         Modified property value based on location and its crime rate
 
     """
-<<<<<<< HEAD
-    import requests
+    url_city = city.replace(" ", "-").lower()
+    url = f"https://www.neighborhoodscout.com/{url_city}-crime"
 
-    url = "https://andruxnet-world-cities-v1.p.rapidapi.com/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
 
-    querystring = {"query":"paris","searchby":"city"}
-
-    headers = {
-	"content-type": "application/octet-stream",
-	"X-RapidAPI-Key": "SIGN-UP-FOR-KEY",
-	"X-RapidAPI-Host": "andruxnet-world-cities-v1.p.rapidapi.com"
-    }
-
-    response = requests.get(url, headers=headers, params=querystring)
-
-    print(response.json())
-=======
-    url = "https://andruxnet-world-cities-v1.p.rapidapi.com/"
-
-    querystring = {"query":"USA"}
-
-    headers = {"content-type": "application/octet-stream", "X-RapidAPI-Key": "db7cefe071msh93380fc92811660p178243jsnf842593f19dd", "X-RapidAPI-Host": "andruxnet-world-cities-v1.p.rapidapi.com"}
-
-    response = requests.get(url, headers=headers, data= querystring)
-
-    print(response.json())
-
-    if response.status_code == 200:
-        # Success!
-        result = response.json()
-        print(result)
+    crime_rate_section = soup.find("section", {"id": "crime-tab"})
+    
+    if crime_rate_section:
+        crime_rate_div = crime_rate_section.find("div", {"class": "dataValue"})
+        crime_rate = crime_rate_div.text.strip()
     else:
-        # Error
-        print("Error:", response.status_code)
+        return "Crime data not found for this city."
 
->>>>>>> aef25f75276bf04b9662953677380f1a33fc10a9
+    if crime_rate > 0 and crime_rate <=500:
+        return current_value * 1.075
+    elif crime_rate > 500 and crime_rate <= 800:
+        return current_value * 1.025
+    elif crime_rate > 800 and crime_rate <= 1200:
+        decreaser = current_value * .01
+        return current_value - decreaser
+    elif crime_rate > 1200 and 2000:
+        decreaser = current_value * .05
+        return current_value - decreaser
+    else:
+        decreaser = current_value * .08
+        return current_value - decreaser
 
 def value_checker(final_value):
     """
