@@ -13,7 +13,7 @@ from argparse import ArgumentParser
 import requests
 
 class House:
-    def __init__(self, size, age, bedrooms, bathrooms, windows, location, doors):
+    def __init__(self, size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
         """
         Arguments:
             size: The size of the home, in square feet
@@ -23,6 +23,7 @@ class House:
             windows: Number of windows installed throughout the house
             location: Where the home is located in
             doors: Number of doors throughout the house
+            crime_rate: The crime rate within the area per capita
             Two optional parameters for this is garage for old homes (50 and up)
             whether it was renovated(these will be in boolean)
         Returns:
@@ -35,6 +36,8 @@ class House:
         self.windows = windows
         self.location = location
         self.doors = doors
+        self.crime_rate = crime_rate
+
 
 
 def size_base_value(size):
@@ -42,7 +45,7 @@ def size_base_value(size):
     Arguments:
         size: The size of the home, in square feet. This will set the base value of the home based on the
         following information:
-        1. 120 - 500 feet: $50,000
+        1. 120 - 500 feet: $500
         2. 501 - 800 feet: $100,000
         3. 801 - 1,000 feet: $175,000
         4. 1,001 - 1,500 feet: $250,000
@@ -53,7 +56,7 @@ def size_base_value(size):
     Returns:
         Base value of the home based on size
     """
-    if size < 120 or size > 500:
+    if size < 120 or size > 5000:
         return None
     elif size <= 500:
         return 500
@@ -108,6 +111,7 @@ def age_value(age, current_value):
         decreaser = current_value * .075
         return current_value - decreaser
 
+
 def bedrooms_bathrooms_value(bedrooms, bathrooms, current_value):
     """
     Arguments:
@@ -135,7 +139,7 @@ def bedrooms_bathrooms_value(bedrooms, bathrooms, current_value):
         bedrooms_increase = 0.075
     elif bedrooms >= 10:
         bedrooms_increase = 0.125
-    
+
     bathrooms_increase = 0
     if bathrooms > 1 and bathrooms <= 4:
         bathrooms_increase = 0.025
@@ -143,7 +147,7 @@ def bedrooms_bathrooms_value(bedrooms, bathrooms, current_value):
         bathrooms_increase = 0.05
     elif bathrooms >= 8:
         bathrooms_increase = 0.075
-    
+
     return current_value * (1 + bedrooms_increase + bathrooms_increase)
 
 def doors_windows_value(doors, windows, current_value):
@@ -176,7 +180,7 @@ def doors_windows_value(doors, windows, current_value):
         door_inc = .05
     elif doors >= 22 and doors <= 34:
         door_inc = .075
-    else: 
+    else:
         door_inc = 0.1
 
     if windows >= 0 and windows <= 2:
@@ -184,104 +188,107 @@ def doors_windows_value(doors, windows, current_value):
     elif windows >= 3 and windows <= 5:
         window_inc = .035
     elif windows >= 6 and windows <= 9:
-        winow_inc = .05
+        window_inc = .05
     elif windows >= 10 and windows <= 15:
         window_inc = .075
-    else: 
+    else:
         window_inc = 0.2
-    
+
     updated_Value = current_value * (1 + door_inc + window_inc)
 
     return updated_Value
 
-
-def location_safety_value(location, current_value):
+def location_safety_value(city, current_value, crime_rate):
     """
     Arguments:
         current_value: Default value of home based on differing factors
-        location: The location of the home (string) stated by full city name and full city state
+        city: The location of the home (string) stated by full city name and full city state
         (ex. Philadelphia,Pennsylvania is valid)
-        crime_rate: The crime rate of the location per capita (per 100,000 people)
+        crime_rate: The crime rate of the location per capita (per 1000 people)
         Value based on location and crime rate comes down to following factors:
-            1. Locations with crime rate of 0-200 per 100,000: 7.5% increase
-            2. Locations with crime rate of 201-400 per 100,000: 2.5% increase
-            3. Locations with crime rate of 401-600 per 100,000: 1% decrease
-            4. Locations with crime rate of 601-800 per 100,000: 5% decrease
-            5. Locations with crime rate of 801+ per 100,000: 8% decrease
+            1. Locations with crime rate of 0-15 per 1,000: 8.5% increase
+            2. Locations with crime rate of 15-25 per 1,000: 3.5% increase
+            3. Locations with crime rate of 25-36 per 100,000: 1% decrease
+            4. Locations with crime rate of 36-42 per 100,000: 5% decrease
+            5. Locations with crime rate of 42+ per 100,000: 8% decrease
     Returns:
         Modified property value based on location and its crime rate
 
     """
     url_city = city.replace(" ", "-").lower()
-    url = f"https://www.neighborhoodscout.com/{url_city}-crime"
+    url_link = f"https://www.neighborhoodscout.com/{url_city}-crime"
+    #url_link is reference for user to know where to go to get accurate crime data
+    response = requests.get(url_link)
 
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-
-    crime_rate_section = soup.find("section", {"id": "crime-tab"})
-    
-    if crime_rate_section:
-        crime_rate_div = crime_rate_section.find("div", {"class": "dataValue"})
-        crime_rate = crime_rate_div.text.strip()
-    else:
-        return "Crime data not found for this city."
-
-    if crime_rate > 0 and crime_rate <=500:
-        return current_value * 1.075
-    elif crime_rate > 500 and crime_rate <= 800:
-        return current_value * 1.025
-    elif crime_rate > 800 and crime_rate <= 1200:
+    if crime_rate > 0 and crime_rate <=15:
+        return current_value * 1.085
+    elif crime_rate > 15 and crime_rate <= 25:
+        return current_value * 1.035
+    elif crime_rate > 25 and crime_rate <= 36:
         decreaser = current_value * .01
         return current_value - decreaser
-    elif crime_rate > 1200 and 2000:
+    elif crime_rate > 36 and crime_rate<= 42:
         decreaser = current_value * .05
         return current_value - decreaser
     else:
         decreaser = current_value * .08
         return current_value - decreaser
 
-def value_checker(final_value):
+
+
+def value_checker(home, final_value, crime_rate):
     """
+
     Arguments:
+        home: House object created via parameters by user
         final_value: This is the final value of the home based on all the physical attributes of the latter
     Returns:
         A final value assessment to determine whether the property in question is of good value
     """
     great_value_1 = (home.bedrooms >= 3) and (home.bathrooms >= 2) and (crime_rate <= 500) and \
                    (final_value <= 550000)
-    great_value_2 = (home.windows >= 7) and (home.doors >= 20) and(home.bedrooms >= 3) and (home.bathrooms >= 2) \
-                   and (crime_rate <= 500) and \
+
+    great_value_2 = (home.windows >= 7) and (home.doors >= 20) and(home.bedrooms >= 4) and (home.bathrooms >= 3) \
+                   and (crime_rate <= 15) and \
                    (final_value <= 450000)
+
     decent_value_1 = (home.bedrooms >= 2 and home.bedrooms <= 4) and \
                      (home.bathrooms >= 1 and home.bathrooms <= 3) and \
-                     ((crime_rate >= 501 and crime_rate <= 800) or (crime_rate >= 801 and crime_rate <= 1500)) and \
+                     ((crime_rate >= 7 and crime_rate < 17) or (crime_rate >= 17 and crime_rate <= 25)) and \
                    (final_value >= 500000 and final_value <= 650000)
+
     decent_value_2 = (home.windows >= 5 and home.windows <= 8) and (home.doors >= 15 and home.doors <= 21) and \
-        (home.bedrooms >= 2 and home.bedrooms <= 4) and \
+        (home.bedrooms >= 2 and home.bedrooms <= 5) and \
         (home.bathrooms >= 1 and home.bathrooms <= 3) and \
-        ((crime_rate >= 501 and crime_rate <= 800) or (crime_rate >= 801 and crime_rate <= 1500)) and \
-        (final_value >= 500000 and final_value <= 650000)
+        ((crime_rate >= 10 and crime_rate <= 20) or (crime_rate >= 20 and crime_rate <= 34)) and \
+        (final_value >= 550000 and final_value <= 700000)
+
     questionable_value_1 = (home.bedrooms >= 1 and home.bedrooms <= 5) and \
                      (home.bathrooms >= 1 and home.bathrooms <= 3) and \
-                     ((crime_rate >= 1500 and crime_rate <= 1800)) and \
+                     ((crime_rate >= 28 and crime_rate <= 40)) and \
                    (final_value >= 300000 and final_value <= 700000)
+
     questionable_value_2 = (home.windows >= 3 and home.windows <= 8) and (home.doors >= 12 and home.doors <= 23)\
                            and (home.bedrooms >= 1 and home.bedrooms <= 5) and \
                      (home.bathrooms >= 1 and home.bathrooms <= 3) and \
-                     ((crime_rate >= 1500 and crime_rate <= 1800)) and \
+                     ((crime_rate >= 30 and crime_rate <= 42)) and \
                    (final_value >= 300000 and final_value <= 700000)
+
     bad_value_1 = (home.bedrooms >= 1 and home.bedrooms <= 3) and \
                      (home.bathrooms >= 0 and home.bathrooms <= 1) and \
-                     ((crime_rate > 1801)) and \
+                     ((crime_rate > 42)) and \
                    (final_value >= 200000 and final_value <= 800000)
+
     bad_value_2 = (home.windows >= 2 and home.windows <= 7) and (home.doors >= 7 and home.doors <= 23)\
                     and (home.bedrooms >= 1 and home.bedrooms <= 3) and \
                      (home.bathrooms >= 0 and home.bathrooms <= 1) and \
-                     ((crime_rate >= 1801)) and \
+                     ((crime_rate >= 42)) and \
                    (final_value >= 200000 and final_value <= 800000)
+
     if great_value_1 == True or great_value_2 == True:
         print("After assessing the different aspects of this property, we have "
-              "concluded that this property is a good buy")
+              "concluded that this property is a great buy and you shouldn't have any second thoughts about "
+              "purchasing the property!")
     if decent_value_1 == True or decent_value_2 == True:
         print("After assessing the different aspects of this property, we have "
               "concluded that this property is a decent buy, through there are better options out there")
@@ -293,6 +300,7 @@ def value_checker(final_value):
         print("After assessing the different aspects of this property, we have "
               "concluded that this property is not a good buy, and any thoughts of purchasing should be"
               "heavily reconsidered")
+
 
 def main(size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
     """
@@ -309,7 +317,8 @@ def main(size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
         Creates object, computes home value using calculating functions, and determines whether the property is
         a good buy
     """
-    home = House(size, age, bedrooms, bathrooms, windows, location, doors)
+    print("326 PROPERTY VALUE ESTIMATOR:\n")
+    home = House(size, age, bedrooms, bathrooms, windows, location, doors, crime_rate)
     base_value = size_base_value(home.size)
     print("The base value for the property is: $", base_value)
 
@@ -327,11 +336,14 @@ def main(size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
                                                               " value to $",
           doors_windows_adjusted_value)
 
-    #location_safety_adjusted_value = location_safety_value(home.location, doors_windows_adjusted_value)
-    #print("After assessing the location of the property, the final value
-    #  comes out to $", location_safety_adjusted_value)
+    location_safety_adjusted_value = location_safety_value(home.location, doors_windows_adjusted_value, home.crime_rate)
+    print("After assessing the location of the property, the final value "
+          "comes out to $", location_safety_adjusted_value)
 
-    #value_checker(location_safety_adjusted_value)
+    value_checker(home, doors_windows_adjusted_value, home.crime_rate)
+
+    print("\nThanks for using the 326 Property Value Estimator! We hope to have you back soon!")
+
 
 
 def parse_args(args_list):
@@ -347,7 +359,6 @@ def parse_args(args_list):
             windows
             location
             doors
-            crime_rate
     Returns:
         args (ArgumentParser)
     """
@@ -359,6 +370,7 @@ def parse_args(args_list):
     parser.add_argument('windows', type=int, help='Number of windows on the property')
     parser.add_argument('location', type=str, help='Location of the property in the U.S')
     parser.add_argument('doors', type=int, help='Number of doors in property')
+    parser.add_argument('crime_rate', type=int, help='Crime rate in location of property, per 1000')
 
     args = parser.parse_args(args_list)
     states = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado",
@@ -384,16 +396,20 @@ def parse_args(args_list):
         raise IndexError("State entered is not a real U.S state")
     if args.doors < 0:
         raise ValueError("Number of doors cannot be negative")
+    if args.crime_rate < 0 and args.crime_rate > 1000:
+        raise ValueError("Invalid crime rate enter. Ensure the crime rate you are entering is"
+                         " per capita (per 1,000 people")
     return args
+
+
 
 if __name__ == "__main__":
     """
-    Only function is to call the main
+    Only function is to intake arguments and call main
     """
     arguments = parse_args(sys.argv[1:])
     main(arguments.size, arguments.age, arguments.bedrooms, arguments.bathrooms,
-            arguments.windows, arguments.location, arguments.doors)
-
+            arguments.windows, arguments.location, arguments.doors, arguments.crime_rate)
 
 
 
