@@ -55,6 +55,8 @@ def size_base_value(size):
         8. 5,001+ feet: $1,000,000
     Returns:
         Base value of the home based on size
+
+    Source: https://www.homelight.com/blog/buyer-how-much-does-it-cost-to-build-a-house/
     """
     if size < 120 or size > 5000:
         return None
@@ -90,6 +92,8 @@ def age_value(age, current_value):
         8. Aging big time (71+ years): 7.5% drop in home value
     Returns:
          Modified home value based on age
+
+    Source: https://www.opendoor.com/articles/factors-that-influence-home-value (Age section)
     """
     if (age >= 0) and (age <= 4):
         return current_value * 1.15
@@ -131,6 +135,10 @@ def bedrooms_bathrooms_value(bedrooms, bathrooms, current_value):
     Returns:
         Modified home value based on number of bedrooms and bathrooms
 
+
+    Source: https://newsilver.com/the-lender/how-much-value-does-an-extra-
+    bedroom-add/#:~:text=A%20half%2Dbath%20has%20been,time%20to%20sell%20comes%20around.
+
     """
     bedrooms_increase = 0
     if bedrooms > 1 and bedrooms <= 5:
@@ -171,6 +179,9 @@ def doors_windows_value(doors, windows, current_value):
     Returns:
         Updated home value based on number of doors and windows in home.
 
+    Source: https://thewindowdoorstore.com/how-much-value-do-new-windows-and-doors-add-to-a-home/#:~:text=
+    Added%20Resale%20Value%20of%20New%20Windows%20and%20Doors&text=According%20to%20
+    a%202020%20survey,estimated%20ROI%20of%2081%20percent.
     """
     if doors >= 0 and doors <= 7:
         door_inc = .015
@@ -204,15 +215,18 @@ def location_safety_value(city, current_value, crime_rate):
         current_value: Default value of home based on differing factors
         city: The location of the home (string) stated by full city name and full city state
         (ex. Philadelphia,Pennsylvania is valid)
-        crime_rate: The crime rate of the location per capita (per 1000 people)
+        crime_rate: The crime rate of the location per capita (per 1000 people) (float)
         Value based on location and crime rate comes down to following factors:
-            1. Locations with crime rate of 0-15 per 1,000: 8.5% increase
-            2. Locations with crime rate of 15-25 per 1,000: 3.5% increase
-            3. Locations with crime rate of 25-36 per 100,000: 1% decrease
-            4. Locations with crime rate of 36-42 per 100,000: 5% decrease
-            5. Locations with crime rate of 42+ per 100,000: 8% decrease
+            1. Locations with crime rate of 0-20 per 1,000: 8.5% increase
+            2. Locations with crime rate of 20-30 per 1,000: 3.5% increase
+            3. Locations with crime rate of 30-42 per 1,000: 1% decrease
+            4. Locations with crime rate of 42-50 per 1,000: 5% decrease
+            5. Locations with crime rate of 50+ per 1,000: 8% decrease
     Returns:
         Modified property value based on location and its crime rate
+
+    https://www.reallistingagent.com/blog/2021/5/5/how-crime-rate-affects-property-value#:~:
+    text=Plenty%20of%20factors%2C%20both%20in,your%20property%20will%20be%20worth.
 
     """
     url_city = city.replace(" ", "-").lower()
@@ -220,14 +234,14 @@ def location_safety_value(city, current_value, crime_rate):
     #url_link is reference for user to know where to go to get accurate crime data
     response = requests.get(url_link)
 
-    if crime_rate > 0 and crime_rate <=15:
+    if crime_rate > 0.0 and crime_rate <=20.0:
         return current_value * 1.085
-    elif crime_rate > 15 and crime_rate <= 25:
+    elif crime_rate > 20.0 and crime_rate <= 30.0:
         return current_value * 1.035
-    elif crime_rate > 25 and crime_rate <= 36:
+    elif crime_rate > 30.0 and crime_rate <= 42.0:
         decreaser = current_value * .01
         return current_value - decreaser
-    elif crime_rate > 36 and crime_rate<= 42:
+    elif crime_rate > 42.0 and crime_rate<= 50.0:
         decreaser = current_value * .05
         return current_value - decreaser
     else:
@@ -245,16 +259,16 @@ def value_checker(home, final_value, crime_rate):
     Returns:
         A final value assessment to determine whether the property in question is of good value
     """
-    great_value_1 = (home.bedrooms >= 3) and (home.bathrooms >= 2) and (crime_rate <= 500) and \
+    great_value_1 = (home.bedrooms >= 3) and (home.bathrooms >= 2) and (crime_rate <= 20) and \
                    (final_value <= 550000)
 
     great_value_2 = (home.windows >= 7) and (home.doors >= 20) and(home.bedrooms >= 4) and (home.bathrooms >= 3) \
-                   and (crime_rate <= 15) and \
+                   and (crime_rate <= 20) and \
                    (final_value <= 450000)
 
     decent_value_1 = (home.bedrooms >= 2 and home.bedrooms <= 4) and \
                      (home.bathrooms >= 1 and home.bathrooms <= 3) and \
-                     ((crime_rate >= 7 and crime_rate < 17) or (crime_rate >= 17 and crime_rate <= 25)) and \
+                     ((crime_rate >= 20 and crime_rate < 35) or (crime_rate >= 15 and crime_rate <= 25)) and \
                    (final_value >= 500000 and final_value <= 650000)
 
     decent_value_2 = (home.windows >= 5 and home.windows <= 8) and (home.doors >= 15 and home.doors <= 21) and \
@@ -265,24 +279,24 @@ def value_checker(home, final_value, crime_rate):
 
     questionable_value_1 = (home.bedrooms >= 1 and home.bedrooms <= 5) and \
                      (home.bathrooms >= 1 and home.bathrooms <= 3) and \
-                     ((crime_rate >= 28 and crime_rate <= 40)) and \
+                     ((crime_rate >= 30 and crime_rate <= 45)) and \
                    (final_value >= 300000 and final_value <= 700000)
 
     questionable_value_2 = (home.windows >= 3 and home.windows <= 8) and (home.doors >= 12 and home.doors <= 23)\
                            and (home.bedrooms >= 1 and home.bedrooms <= 5) and \
                      (home.bathrooms >= 1 and home.bathrooms <= 3) and \
-                     ((crime_rate >= 30 and crime_rate <= 42)) and \
+                     ((crime_rate >= 37 and crime_rate <= 50)) and \
                    (final_value >= 300000 and final_value <= 700000)
 
     bad_value_1 = (home.bedrooms >= 1 and home.bedrooms <= 3) and \
                      (home.bathrooms >= 0 and home.bathrooms <= 1) and \
-                     ((crime_rate > 42)) and \
+                     ((crime_rate > 50)) and \
                    (final_value >= 200000 and final_value <= 800000)
 
     bad_value_2 = (home.windows >= 2 and home.windows <= 7) and (home.doors >= 7 and home.doors <= 23)\
                     and (home.bedrooms >= 1 and home.bedrooms <= 3) and \
                      (home.bathrooms >= 0 and home.bathrooms <= 1) and \
-                     ((crime_rate >= 42)) and \
+                     ((crime_rate >= 50)) and \
                    (final_value >= 200000 and final_value <= 800000)
 
     if great_value_1 == True or great_value_2 == True:
@@ -370,7 +384,7 @@ def parse_args(args_list):
     parser.add_argument('windows', type=int, help='Number of windows on the property')
     parser.add_argument('location', type=str, help='Location of the property in the U.S')
     parser.add_argument('doors', type=int, help='Number of doors in property')
-    parser.add_argument('crime_rate', type=int, help='Crime rate in location of property, per 1000')
+    parser.add_argument('crime_rate', type=float, help='Crime rate in location of property, per 1000')
 
     args = parser.parse_args(args_list)
     states = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado",
