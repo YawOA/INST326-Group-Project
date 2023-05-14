@@ -1,8 +1,15 @@
+"""A template for a python script deliverable for INST326.
+Names: Daniel Jeong, Irfan Mushfique, Nooran Elmostafa, Yaw Apraku
+File: unit_tests.py
+Assignment: Final Project
+Due Date: -------
+Description: This python file contains the unit tests for our final project
+"""
 from final_project import House
 import unittest
 
 class Function_Tester:
-    def __int__(self, object):
+    def __init__(self, object):
         self.object = object
         self.base = final_project.size_base_value(self.object.size)
 
@@ -31,14 +38,16 @@ class Function_Tester:
         modifier = base * .08
         expected = base - modifier
         self.assertEqual(expected, actual, "Failed to load correct output")
-    
+
     def test_value_checker(self):
         actual = final_project.location_safety_value(self.base)
-        expected = "This property is not a good buy"
+        expected = "After assessing the different aspects of this property, we have " \
+              "concluded that this property is a great buy and you shouldn't have any second thoughts about " \
+              "purchasing the property!"
         self.assertEqual(expected, actual, "Failed to load correct output")
 
 
 def main():
-    house = House(1500, 12, 4, 3, 7, "Oakland,California", 20, 70.03)
+    house = House(1500, 15, 3, 4, 8, "Frisco,Texas", 21, 10.56)
     tester = Function_Tester(house)
     print(tester)
