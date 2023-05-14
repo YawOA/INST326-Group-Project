@@ -58,10 +58,10 @@ def size_base_value(size):
 
     Source: https://www.homelight.com/blog/buyer-how-much-does-it-cost-to-build-a-house/
     """
-    if size < 120 or size > 50000:
+    if size < 120:
         return None
     elif size <= 500:
-        return 500
+        return 50000
     elif size <= 800:
         return 100000
     elif size <= 1000:
