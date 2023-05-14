@@ -337,20 +337,24 @@ def main(size, age, bedrooms, bathrooms, windows, location, doors, crime_rate):
     print("The base value for the property is: $", base_value)
 
     age_adjusted_value = age_value(home.age, base_value)
+    age_adjusted_value = round(age_adjusted_value, 2)
     print("The age of the home is", home.age, "years. Therefore, this changes the property value"
                                               " to $", age_adjusted_value)
 
     bedrooms_bathrooms_adjusted_value = bedrooms_bathrooms_value(home.bedrooms, home.bathrooms, age_adjusted_value)
+    bedrooms_bathrooms_adjusted_value = round(bedrooms_bathrooms_adjusted_value, 2)
     print("There are", home.bedrooms, "bedrooms and", home.bathrooms, "bathrooms. Therefore, this changes the "
                                                                       "property value to $",
           bedrooms_bathrooms_adjusted_value)
 
     doors_windows_adjusted_value = doors_windows_value(home.doors, home.windows, bedrooms_bathrooms_adjusted_value)
+    doors_windows_adjusted_value = round(doors_windows_adjusted_value, 2)
     print("There are", home.doors, "doors and", home.windows, "windows. Therefore, this changes the property"
                                                               " value to $",
           doors_windows_adjusted_value)
 
     location_safety_adjusted_value = location_safety_value(home.location, doors_windows_adjusted_value, home.crime_rate)
+    location_safety_adjusted_value = round(location_safety_adjusted_value, 2)
     print("After assessing the location of the property, the final value "
           "comes out to $", location_safety_adjusted_value)
 
